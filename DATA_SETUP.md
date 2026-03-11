@@ -1,5 +1,7 @@
 # Dataset Setup (BraTS 2020)
 
+## https://www.kaggle.com/code/zeeshanlatif/brain-tumor-segmentation-using-u-net
+
 The BraTS dataset is large (\~8--9 GB), so it is **not included in this
 repository**.\
 Each team member must download it locally before running the project.
