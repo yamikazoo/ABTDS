@@ -16,6 +16,7 @@ This makes it easy for the rest of the team to train and validate the model.
 """
 
 import random
+import pytorch_lightning as pl
 from monai.data import Dataset
 from torch.utils.data import DataLoader
 
@@ -23,7 +24,7 @@ from src.components.data_index import build_brats_file_list
 from src.components.transforms import get_train_transforms, get_val_transforms
 
 
-class BraTSDataModule:
+class BraTSDataModule(pl.LightningDataModule):
     """
     Manages the BraTS dataset pipeline.
 
@@ -54,6 +55,8 @@ class BraTSDataModule:
         - patch_size: 3D patch size for training transforms
         - seed: random seed for reproducible splitting
         """
+        super().__init__()
+        
         self.data_dir = data_dir
         self.train_split = train_split
         self.batch_size = batch_size
@@ -67,7 +70,7 @@ class BraTSDataModule:
         self.train_dataset = None
         self.val_dataset = None
 
-    def setup(self):
+    def setup(self, stage=None):
         """
         Prepares the datasets.
 
@@ -134,5 +137,3 @@ class BraTSDataModule:
             shuffle=False,
             num_workers=self.num_workers,
         )
-    
-    

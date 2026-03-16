@@ -23,8 +23,6 @@ label: [H, W, D] or [1, H, W, D]
 This preprocessing is handled using MONAI transforms.
 '''
 
-
-
 from monai.transforms import (
     Compose,
     LoadImaged,
@@ -35,8 +33,8 @@ from monai.transforms import (
     RandFlipd,
     RandRotate90d,
     RandSpatialCropd,
+    MapLabelValued, 
 )
-
 
 def get_train_transforms(patch_size=(96, 96, 96)):
     return Compose([
@@ -45,6 +43,9 @@ def get_train_transforms(patch_size=(96, 96, 96)):
         
         #Makes sure channels come first, so the 4 MRI modalities become channel-first input
         EnsureChannelFirstd(keys=["image", "label"]),
+        
+        #Re-maps label 4 (Enhancing Tumor) to 3 to prevent index out of bounds error
+        MapLabelValued(keys="label", orig_labels=[4], target_labels=[3]),
         
         #Standardizes MRI intensities so scans from different patients are more comparable
         NormalizeIntensityd(keys="image", nonzero=True, channel_wise=True),
@@ -76,6 +77,9 @@ def get_val_transforms():
         
         #Reorders the data so channels come first. The 4 MRI modalities become a 4-channel image tensor.
         EnsureChannelFirstd(keys=["image", "label"]),
+
+        #Re-maps label 4 (Enhancing Tumor) to 3 to prevent index out of bounds error
+        MapLabelValued(keys="label", orig_labels=[4], target_labels=[3]),
 
         #Normalizes MRI intensity values so scans from different patients are on a similar scale.
         NormalizeIntensityd(keys="image", nonzero=True, channel_wise=True),
