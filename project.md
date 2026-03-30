@@ -203,10 +203,47 @@ Prevent merge conflicts and blocking:
 
 ---
 
+## Completed Work
+
+- ✅ Data download script and BraTS file indexing (Rodrigo)
+- ✅ MONAI transform pipelines — train and val (Rodrigo)
+- ✅ Lightning DataModule with 80/20 split (Rodrigo)
+- ✅ SegResNet model + DiceCELoss training loop (Yami)
+- ✅ Sliding window validation + Dice metric logging (Vi)
+- ✅ BraTSMetrics class for WT/TC/ET with Dice and HD95 (Vi)
+- ✅ Training entry point with CLI args (src/run.py)
+- ✅ W&B integration with --wandb flag (Tallal)
+- ✅ YAML-based hyperparameter config system (Tallal)
+- ✅ W&B Sweep config + launcher script for HP tuning (Tallal)
+- ✅ Training documentation (TRAINING.md) (Tallal)
+- ✅ Pipeline verified end-to-end on full 370-patient dataset
+- ✅ Basic test scripts for transforms and data module
+
+## Remaining Work
+
+### Alex — Post-Processing & Visualization
+- [ ] `src/utils/post_process.py` — Connected component analysis to remove small false-positive tumor islands from predictions
+- [ ] `src/utils/visualization.py` — Overlay predicted tumor masks on 2D MRI slices for qualitative evaluation
+- [ ] Final documentation and reproducibility instructions in the project report
+
+### Yami — Model & Training Improvements
+- [ ] Learning rate scheduler (e.g., CosineAnnealingLR or WarmRestarts) in `configure_optimizers()` — current constant lr of 1e-4 limits convergence
+- [ ] Evaluate whether extracting the model into a separate `src/components/model.py` improves clarity (currently lives in `src/train.py`)
+
+### Vi — Validation & Metrics
+- [ ] Log per-region Dice scores (WT, TC, ET) separately during validation, not just the averaged `val_mean_dice`
+- [ ] Integrate BraTSMetrics (HD95) into the validation loop — currently only Dice is computed during training
+
+### Team — Final Steps
+- [ ] Full training run on a machine with a dedicated GPU (NVIDIA recommended) to achieve target Dice > 0.7
+- [ ] Hyperparameter sweep via `python sweep.py --count 5` to find optimal lr
+- [ ] Record demo video (1:40–2 min) showcasing predictions
+- [ ] Complete and submit the Overleaf project report
+
 ## Success Criteria
 
-- ✓ Pipeline runs end-to-end on 50-patient subset without errors
+- ✓ Pipeline runs end-to-end on full dataset without errors
 - ✓ Model achieves baseline Dice scores for each tumor region
 - ✓ Validation uses proper sliding-window inference on full volumes
-- ✓ Clear visualization of predictions for final report
+- ○ Clear visualization of predictions for final report
 - ✓ Complete documentation for reproducibility
