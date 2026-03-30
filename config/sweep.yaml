@@ -1,0 +1,23 @@
+# W&B Sweep configuration for hyperparameter tuning
+program: src/run.py
+method: bayes
+metric:
+  name: val_mean_dice
+  goal: maximize
+
+parameters:
+  lr:
+    min: 1e-5
+    max: 1e-3
+    distribution: log_uniform_values
+  batch_size:
+    values: [1, 2]
+  epochs:
+    value: 20
+
+command:
+  - ${env}
+  - python
+  - ${program}
+  - "--wandb"
+  - ${args_no_hyphens}

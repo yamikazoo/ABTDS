@@ -1,0 +1,1 @@
+- [Tallal's role](user_tallal.md) — MLOps & Cloud lead on CMPT 419 BraTS project, manages deps and GPU infra

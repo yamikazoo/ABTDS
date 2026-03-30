@@ -35,6 +35,11 @@ def build_brats_file_list(data_dir):
 
     for patient in patient_dirs:
         pid = patient.name
+        seg_path = patient / f"{pid}_seg.nii"
+
+        # Skip patients with missing or non-standard segmentation files
+        if not seg_path.exists():
+            continue
 
         entry = {
             "image": [
@@ -43,7 +48,7 @@ def build_brats_file_list(data_dir):
                 str(patient / f"{pid}_t1ce.nii"),
                 str(patient / f"{pid}_t2.nii"),
             ],
-            "label": str(patient / f"{pid}_seg.nii"),
+            "label": str(seg_path),
         }
 
         dataset.append(entry)

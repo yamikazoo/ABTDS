@@ -163,3 +163,4 @@ cython_debug/
 data/
 *.nii
 *.nii.gz
+claude.md

@@ -1,11 +1,19 @@
+name: amazing
+channels:
+  - conda-forge
+  - defaults
 dependencies:
   - python>=3.10
-  - torch
-  - torchvision
-  - monai
-  - nibabel
+  - pip
   - numpy
   - matplotlib
   - scikit-learn
   - tqdm
-  - pytorch-lightning
+  - nibabel
+  - pip:
+    - torch
+    - torchvision
+    - monai[all]
+    - pytorch-lightning
+    - wandb
+    - pyyaml
