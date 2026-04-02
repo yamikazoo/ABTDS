@@ -119,3 +119,31 @@ brats-epoch=12-val_mean_dice=0.6234.ckpt
 | Google Colab (T4) | ~5 min | ~4 hours |
 
 Times vary based on the specific hardware and number of dataloader workers.
+
+## Running on a Machine with an NVIDIA GPU
+
+If you have access to a PC with a dedicated NVIDIA GPU (recommended for faster training):
+
+```bash
+# 1. Clone the repo
+git clone <repo-url>
+cd 2026_1_project_20
+
+# 2. Set up environment
+conda env create -f requirements.yml
+conda activate amazing
+
+# 3. Download dataset (~8-9 GB)
+export KAGGLE_API_TOKEN=<your-token>
+pip install kaggle
+python download_data.py
+
+# 4. Train with mixed precision (2x faster on NVIDIA GPUs)
+python -m src.run --config config/default.yaml --amp
+```
+
+Notes:
+- The `KMP_DUPLICATE_LIB_OK=TRUE` flag is only needed on macOS — skip it on Linux/Windows
+- The `--amp` flag enables mixed precision which is much faster on NVIDIA GPUs
+- Lightning auto-detects CUDA — no config changes needed
+- Monitor with TensorBoard in a second terminal: `tensorboard --logdir outputs/logs/brats_baseline`

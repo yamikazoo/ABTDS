@@ -33,9 +33,9 @@ class BraTSModel(pl.LightningModule):
         return self.model(x)
 
     def configure_optimizers(self):
-        # Yami: Setting up the AdamW optimizer
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.learning_rate, weight_decay=1e-5)
-        return optimizer
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=self.trainer.max_epochs)
+        return {"optimizer": optimizer, "lr_scheduler": scheduler}
 
     def training_step(self, batch, batch_idx):
         # Yami's Training Loop
