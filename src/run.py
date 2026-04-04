@@ -1,8 +1,12 @@
 import argparse
 import yaml
+import torch
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import TensorBoardLogger, WandbLogger
+
+# Enable TensorFloat32 (TF32) for NVIDIA Ampere+ GPUs to speed up 3D convolutions
+torch.set_float32_matmul_precision('medium')
 
 from src.components.data_module import BraTSDataModule
 from src.train import BraTSModel
@@ -56,7 +60,7 @@ def main(args):
         overfit_batches=args.overfit_batches,
     )
 
-    trainer.fit(model, datamodule=datamodule)
+    trainer.fit(model, datamodule=datamodule, ckpt_path=args.ckpt_path)
 
 
 if __name__ == "__main__":
@@ -68,6 +72,7 @@ if __name__ == "__main__":
     parser.add_argument("--lr", type=float, default=None)
     parser.add_argument("--epochs", type=int, default=None)
     parser.add_argument("--amp", action="store_true", help="Enable Automatic Mixed Precision")
+    parser.add_argument("--ckpt_path", type=str, default=None, help="Path to checkpoint to resume from")
 
     # W&B flags
     parser.add_argument("--wandb", action="store_true", help="Enable Weights & Biases logging")

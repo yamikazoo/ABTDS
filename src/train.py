@@ -34,8 +34,18 @@ class BraTSModel(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.learning_rate, weight_decay=1e-5)
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=self.trainer.max_epochs)
-        return {"optimizer": optimizer, "lr_scheduler": scheduler}
+        # Using ReduceLROnPlateau to dynamically reduce LR when validation loss stops improving
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer, mode="min", factor=0.5, patience=5, min_lr=1e-6
+        )
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": scheduler,
+                "monitor": "val_loss",
+                "frequency": 1
+            }
+        }
 
     def training_step(self, batch, batch_idx):
         # Yami's Training Loop
