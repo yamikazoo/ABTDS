@@ -1,6 +1,7 @@
 import os
 import torch
 import numpy as np
+import nibabel as nib
 import matplotlib.pyplot as plt
 import pytorch_lightning as pl
 from monai.inferers import sliding_window_inference
@@ -23,8 +24,9 @@ def main():
     data_module.setup()
     val_loader = data_module.val_dataloader()
 
-    # Create output directory
+    # Create output directories
     os.makedirs("outputs/predictions", exist_ok=True)
+    os.makedirs("outputs/predictions_nifti", exist_ok=True)
 
     # Generate predictions for a few samples
     num_samples = 3
@@ -66,6 +68,14 @@ def main():
             # Convert to argmax shape [1, 1, H, W, D] for visualization
             pred_argmax = torch.argmax(val_outputs, dim=1, keepdim=True)
             pred_slice = pred_argmax[0, 0, :, :, best_slice].cpu().numpy()
+
+            # Save full 3D prediction as NIfTI so the cleaner can process it
+            pred_vol = pred_argmax[0, 0].cpu().numpy().astype(np.int16)
+            nib.save(
+                nib.Nifti1Image(pred_vol, affine=np.eye(4)),
+                f"outputs/predictions_nifti/sample_{i}.nii.gz",
+            )
+            print(f"Saved NIfTI prediction to outputs/predictions_nifti/sample_{i}.nii.gz")
 
             # Plot
             fig, axes = plt.subplots(1, 3, figsize=(15, 5))
