@@ -31,11 +31,11 @@ def main():
 
     # Load trained model
     ckpt_path = "outputs/checkpoints/brats-epoch=93-val_mean_dice=0.7317.ckpt"
-    model = BraTSModel.load_from_checkpoint(ckpt_path)
+    model = BraTSModel.load_from_checkpoint(ckpt_path, map_location="cpu")
     model.eval()
     model.freeze()
 
-    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
     model = model.to(device)
 
     # Load a few validation samples

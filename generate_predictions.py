@@ -12,7 +12,7 @@ def main():
     print("Loading model...")
     # Load the model from checkpoint
     checkpoint_path = "outputs/checkpoints/brats-epoch=97-val_mean_dice=0.7316.ckpt"
-    model = BraTSModel.load_from_checkpoint(checkpoint_path)
+    model = BraTSModel.load_from_checkpoint(checkpoint_path, map_location="cpu")
     model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
