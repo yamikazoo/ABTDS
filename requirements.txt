@@ -1,0 +1,12 @@
+torch
+torchvision
+monai[all]
+pytorch-lightning
+nibabel
+numpy
+matplotlib
+scikit-learn
+tqdm
+wandb
+pyyaml
+kaggle

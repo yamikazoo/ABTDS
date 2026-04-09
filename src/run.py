@@ -1,4 +1,5 @@
 import argparse
+import os
 import yaml
 import torch
 import pytorch_lightning as pl
@@ -28,6 +29,9 @@ def main(args):
     )
 
     model = BraTSModel(learning_rate=args.lr)
+
+    os.makedirs("outputs/checkpoints", exist_ok=True)
+    os.makedirs("outputs/logs", exist_ok=True)
 
     checkpoint_callback = ModelCheckpoint(
         dirpath="outputs/checkpoints",
